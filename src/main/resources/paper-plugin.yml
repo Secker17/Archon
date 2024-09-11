@@ -1,0 +1,10 @@
+name: Archon
+main: com.asfaltios.archon.Archon
+version: 2.0
+api-version: 1.21
+description: A highly advanced admin control panel with player, server, and world management tools.
+author: Asfaltios
+commands:
+  archon:
+    description: Opens the admin control panel and shows detailed help.
+    usage: /archon <help/gui/ban/kick/mute/unmute/freeze/fly/gm/tp/heal/feed>
