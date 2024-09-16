@@ -1,0 +1,14 @@
+name: Archon
+main: com.asfaltios.archon.Archon
+version: 1.0
+author: Asfaltios
+api-version: 1.21  # Replace with your target Minecraft version
+commands:
+  admin:
+    description: Opens the admin GUI.
+    usage: /admin
+    permission: archon.admin
+permissions:
+  archon.admin:
+    description: Allows access to the Archon admin panel.
+    default: op
