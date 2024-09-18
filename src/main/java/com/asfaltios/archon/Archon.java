@@ -15,7 +15,7 @@ public class Archon extends JavaPlugin {
         displayStartupMessage();
 
         // Register commands and event listeners
-        getCommand("admin").setExecutor(new AdminCommand());
+        getCommand("admin").setExecutor(new AdminCommand(this));
         getServer().getPluginManager().registerEvents(new AdminGUI(), this);
         getServer().getPluginManager().registerEvents(new ChatInputHandler(), this);
 
@@ -42,12 +42,12 @@ public class Archon extends JavaPlugin {
     private void displayStartupMessage() {
         String[] message = {
                 "",
-                "§a █████╗   ███████╗   ",
-                "§a██╔══██╗  ██╔════╝   ",
-                "§a███████║  █████╗ ",
-                "§a██╔══██║  ██╔══╝  ",
-                "§a██║  ██║  ██║    ",
-                "§a╚═╝  ╚═╝  ╚═╝     ",
+                "§a███████  ███████╗   ",
+                "§a██╔══██  ██╔════╝   ",
+                "§a███████  █████╗ ",
+                "§a██╔══██  ██╔══╝  ",
+                "§a██║  ██  ██║     ",
+                "§a╚═╝  ╚╝  ╚═╝     ",
                 "",
                 "§eMade by Asfaltios Advanced",
                 "§eJoin our Discord: §9https://discord.gg/ESZtT2aDS3",

@@ -1,14 +1,137 @@
 name: Archon
 main: com.asfaltios.archon.Archon
 version: 1.0
-author: Asfaltios
-api-version: 1.21  # Replace with your target Minecraft version
+api-version: 1.21
+author: Asfaltios Advanced
+description: A comprehensive admin plugin with advanced GUI.
+
 commands:
   admin:
-    description: Opens the admin GUI.
-    usage: /admin
+    description: Opens the Archon Admin GUI.
+    usage: /admin [reload]
     permission: archon.admin
+    aliases: [archon]
+
 permissions:
   archon.admin:
-    description: Allows access to the Archon admin panel.
+    description: Allows access to the main admin command.
+    default: op
+    children:
+      archon.admin.playermanagement: true
+      archon.admin.servermanagement: true
+      archon.admin.personaltools: true
+      archon.admin.reload: true
+
+  archon.admin.reload:
+    description: Allows reloading the plugin.
+    default: op
+
+  archon.admin.playermanagement:
+    description: Allows access to player management features.
+    default: op
+    children:
+      archon.admin.playermanagement.kick: true
+      archon.admin.playermanagement.ban: true
+      archon.admin.playermanagement.mute: true
+      archon.admin.playermanagement.freeze: true
+      archon.admin.playermanagement.teleportto: true
+      archon.admin.playermanagement.bring: true
+      archon.admin.playermanagement.inspect: true
+
+  archon.admin.playermanagement.kick:
+    description: Allows kicking players.
+    default: op
+
+  archon.admin.playermanagement.ban:
+    description: Allows banning players.
+    default: op
+
+  archon.admin.playermanagement.mute:
+    description: Allows muting players.
+    default: op
+
+  archon.admin.playermanagement.freeze:
+    description: Allows freezing players.
+    default: op
+
+  archon.admin.playermanagement.teleportto:
+    description: Allows teleporting to players.
+    default: op
+
+  archon.admin.playermanagement.bring:
+    description: Allows bringing players to you.
+    default: op
+
+  archon.admin.playermanagement.inspect:
+    description: Allows inspecting players' inventories.
+    default: op
+
+  archon.admin.servermanagement:
+    description: Allows access to server management features.
+    default: op
+    children:
+      archon.admin.servermanagement.changetime: true
+      archon.admin.servermanagement.changeweather: true
+      archon.admin.servermanagement.manageworlds: true
+      archon.admin.servermanagement.serverstats: true
+      archon.admin.servermanagement.executecommand: true
+      archon.admin.servermanagement.manageplugins: true
+
+  archon.admin.servermanagement.changetime:
+    description: Allows changing the time.
+    default: op
+
+  archon.admin.servermanagement.changeweather:
+    description: Allows changing the weather.
+    default: op
+
+  archon.admin.servermanagement.manageworlds:
+    description: Allows managing worlds.
+    default: op
+
+  archon.admin.servermanagement.serverstats:
+    description: Allows viewing server statistics.
+    default: op
+
+  archon.admin.servermanagement.executecommand:
+    description: Allows executing server commands.
+    default: op
+
+  archon.admin.servermanagement.manageplugins:
+    description: Allows managing plugins.
+    default: op
+
+  archon.admin.personaltools:
+    description: Allows access to personal admin tools.
+    default: op
+    children:
+      archon.admin.personaltools.togglefly: true
+      archon.admin.personaltools.godmode: true
+      archon.admin.personaltools.heal: true
+      archon.admin.personaltools.giveitem: true
+      archon.admin.personaltools.enderchest: true
+      archon.admin.personaltools.togglegamemode: true
+
+  archon.admin.personaltools.togglefly:
+    description: Allows toggling fly mode.
+    default: op
+
+  archon.admin.personaltools.godmode:
+    description: Allows toggling god mode.
+    default: op
+
+  archon.admin.personaltools.heal:
+    description: Allows healing yourself.
+    default: op
+
+  archon.admin.personaltools.giveitem:
+    description: Allows giving yourself items.
+    default: op
+
+  archon.admin.personaltools.enderchest:
+    description: Allows opening your ender chest.
+    default: op
+
+  archon.admin.personaltools.togglegamemode:
+    description: Allows toggling your game mode.
     default: op
