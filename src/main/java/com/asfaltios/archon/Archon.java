@@ -46,7 +46,7 @@ public class Archon extends JavaPlugin {
                 "§a██╔══██  ██╔════╝   ",
                 "§a███████  █████╗ ",
                 "§a██╔══██  ██╔══╝  ",
-                "§a██║  ██  ██║     ",
+                "§a██╔═ ██  ██║     ",
                 "§a╚═╝  ╚╝  ╚═╝     ",
                 "",
                 "§eMade by Asfaltios Advanced",
