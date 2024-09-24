@@ -2,6 +2,15 @@
 # Version: 1.1
 # This configuration file allows you to customize the behavior of the Archon plugin.
 
+# ███████  ███████╗
+# ██╔══██  ██╔════╝
+# ███████  █████╗
+# ██╔══██  ██╔══╝
+# ██╔═ ██  ██║
+# ╚═╝  ╚╝  ╚═╝
+
+#Plugin by Asfaltios Advanced
+
 # ============================================================
 #                     General Settings
 # ============================================================
@@ -58,7 +67,7 @@ gui:
 
 features:
   player-management:
-    enabled: true
+    enabled: true  # Under Development
     kick: true
     ban: true
     mute: true
@@ -73,7 +82,7 @@ features:
     manage-permissions: true
 
   server-management:
-    enabled: true
+    enabled: true # Under Development
     change-time: true
     change-weather: true
     manage-worlds: true
@@ -86,7 +95,7 @@ features:
     stop-server: true
 
   personal-tools:
-    enabled: true
+    enabled: true # Under Development
     toggle-fly: true
     god-mode: true
     heal: true
