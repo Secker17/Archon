@@ -1,17 +1,217 @@
-# ---------------------------------------------
-# Archon Plugin Configuration
-# ---------------------------------------------
-# Plugin Name: Archon
-# Plugin Version: 1.0
-# Made by: Asfaltios Advanced
-# Discord: https://discord.gg/ESZtT2aDS3
-# ---------------------------------------------
-# Description:
-# Archon is an advanced Minecraft admin tool plugin designed
-# to simplify server management and offer powerful in-game
-# features for server admins.
-#
-# Configuration settings for Archon plugin.
-# This will be expanded in the future.
-# ---------------------------------------------
+# Archon Plugin Configuration File
+# Version: 1.1
+# This configuration file allows you to customize the behavior of the Archon plugin.
+
+# ============================================================
+#                     General Settings
+# ============================================================
+
+# Prefix used in all plugin messages
+plugin-prefix: '&7[&bArchon&7]&r '
+
+# Language settings (future expansion)
+language: 'en_US'
+
+# ============================================================
+#                      GUI Settings
+# ============================================================
+
+gui:
+  # Default glass color for GUIs if player hasn't customized it
+  default-glass-color: 'LIGHT_BLUE_STAINED_GLASS_PANE'
+
+  # Titles for various GUIs
+  titles:
+    main-gui: '&k|&4&lArchon &r&4Admin Panel&k|'
+    player-management-gui: '&bPlayer Management'
+    server-management-gui: '&bServer Management'
+    personal-tools-gui: '&bPersonal Tools'
+    admin-settings-gui: '&bAdmin Settings'
+    customize-gui: '&bCustomize GUI'
+    permission-management-gui: '&5Permission Management'
+    player-selector-gui: '&aSelect a Player - %action%'
+    plugin-management-gui: '&bManage Plugins'
+    time-gui: '&eTime Control'
+    weather-gui: '&eWeather Control'
+    world-management-gui: '&aWorld Management'
+    item-give-gui: '&bItem Give'
+    whitelist-management-gui: '&dWhitelist Management'
+
+  # Sound and particle effects when opening GUIs
+  gui-open-sound:
+    enabled: true
+    sound: 'UI_BUTTON_CLICK'
+    volume: 1.0
+    pitch: 1.0
+
+  gui-open-particles:
+    enabled: true
+    particle: 'PORTAL'
+    count: 50
+    offset-x: 1
+    offset-y: 1
+    offset-z: 1
+
+# ============================================================
+#                      Feature Toggles
+# ============================================================
+
+features:
+  player-management:
+    enabled: true
+    kick: true
+    ban: true
+    mute: true
+    freeze: true
+    teleport-to: true
+    bring: true
+    inspect-inventory: true
+    heal: true
+    feed: true
+    set-health: true
+    message: true
+    manage-permissions: true
+
+  server-management:
+    enabled: true
+    change-time: true
+    change-weather: true
+    manage-worlds: true
+    server-stats: true
+    execute-command: true
+    manage-plugins: true
+    whitelist-management: true
+    view-logs: true
+    maintenance-mode: true
+    stop-server: true
+
+  personal-tools:
+    enabled: true
+    toggle-fly: true
+    god-mode: true
+    heal: true
+    give-item: true
+    ender-chest: true
+    toggle-gamemode: true
+    vanish: true
+    set-speed: true
+
+# ============================================================
+#                     Messages and Text
+# ============================================================
+
+messages:
+  no-permission: '&cYou do not have permission to perform this action.'
+  player-not-found: '&cPlayer not found.'
+  invalid-number: '&cInvalid number format.'
+  action-successful: '&aAction performed successfully.'
+  action-failed: '&cAction could not be completed.'
+  maintenance-mode-enabled: '&aMaintenance mode has been enabled.'
+  maintenance-mode-disabled: '&aMaintenance mode has been disabled.'
+  maintenance-mode-kick-message: '&cServer is now in maintenance mode.'
+  server-stopping: '&cServer is stopping in %time% seconds!'
+  shutdown-broadcast: '&cServer is shutting down now.'
+  player-kicked: '&cYou have been kicked by an administrator.'
+  player-banned: '&cYou have been banned by an administrator.'
+  player-muted: '&cYou have been muted by an administrator.'
+  player-unmuted: '&aYou have been unmuted by an administrator.'
+  player-frozen: '&cYou have been frozen.'
+  player-unfrozen: '&aYou have been unfrozen.'
+
+# ============================================================
+#                   Maintenance Mode Settings
+# ============================================================
+
+maintenance-mode:
+  # Whether to kick players when maintenance mode is enabled
+  kick-players-on-enable: true
+
+  # Message displayed to players when maintenance mode is active
+  kick-message: '&cServer is under maintenance.'
+
+  # Players with this permission can bypass maintenance mode
+  bypass-permission: 'archon.admin.bypassmaintenance'
+
+# ============================================================
+#                    Whitelist Settings
+# ============================================================
+
+whitelist:
+  # Message displayed when a player is not whitelisted
+  kick-message: '&cYou are not whitelisted on this server.'
+
+# ============================================================
+#                      Log Viewing Settings
+# ============================================================
+
+logs:
+  # Number of lines to display per page when viewing logs
+  lines-per-page: 10
+
+# ============================================================
+#                      Miscellaneous
+# ============================================================
+
+# Default speed values
+default-walk-speed: 0.2
+default-fly-speed: 0.1
+
+# Maximum allowable speed
+max-speed: 10.0
+
+# ============================================================
+#                      Advanced Settings
+# ============================================================
+
+# Permissions for various actions
+permissions:
+  # Main permissions
+  admin-command: 'archon.admin'
+  admin-reload: 'archon.admin.reload'
+
+  # Player Management Permissions
+  playermanagement:
+    base: 'archon.admin.playermanagement'
+    kick: 'archon.admin.playermanagement.kick'
+    ban: 'archon.admin.playermanagement.ban'
+    mute: 'archon.admin.playermanagement.mute'
+    freeze: 'archon.admin.playermanagement.freeze'
+    teleport-to: 'archon.admin.playermanagement.teleportto'
+    bring: 'archon.admin.playermanagement.bring'
+    inspect-inventory: 'archon.admin.playermanagement.inspect'
+    heal: 'archon.admin.playermanagement.heal'
+    feed: 'archon.admin.playermanagement.feed'
+    set-health: 'archon.admin.playermanagement.sethealth'
+    message: 'archon.admin.playermanagement.message'
+    manage-permissions: 'archon.admin.playermanagement.permission'
+
+  # Server Management Permissions
+  servermanagement:
+    base: 'archon.admin.servermanagement'
+    change-time: 'archon.admin.servermanagement.changetime'
+    change-weather: 'archon.admin.servermanagement.changeweather'
+    manage-worlds: 'archon.admin.servermanagement.manageworlds'
+    server-stats: 'archon.admin.servermanagement.serverstats'
+    execute-command: 'archon.admin.servermanagement.executecommand'
+    manage-plugins: 'archon.admin.servermanagement.manageplugins'
+    whitelist: 'archon.admin.servermanagement.whitelist'
+    view-logs: 'archon.admin.servermanagement.viewlogs'
+    maintenance-mode: 'archon.admin.servermanagement.maintenance'
+    stop-server: 'archon.admin.servermanagement.stopserver'
+
+  # Personal Tools Permissions
+  personaltools:
+    base: 'archon.admin.personaltools'
+    toggle-fly: 'archon.admin.personaltools.togglefly'
+    god-mode: 'archon.admin.personaltools.godmode'
+    heal: 'archon.admin.personaltools.heal'
+    give-item: 'archon.admin.personaltools.giveitem'
+    ender-chest: 'archon.admin.personaltools.enderchest'
+    toggle-gamemode: 'archon.admin.personaltools.togglegamemode'
+    vanish: 'archon.admin.personaltools.vanish'
+    set-speed: 'archon.admin.personaltools.speed'
+
+# ============================================================
+#                      End of Configuration
+# ============================================================
 

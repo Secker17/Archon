@@ -18,13 +18,15 @@ public class AdminCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("plugin-prefix"));
+
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("archon.admin.reload")) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to reload the plugin.");
+            if (!sender.hasPermission(plugin.getConfig().getString("permissions.admin-reload"))) {
+                sender.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.no-permission")));
                 return true;
             }
             plugin.reloadConfig();
-            sender.sendMessage(ChatColor.GREEN + "Archon plugin reloaded.");
+            sender.sendMessage(prefix + ChatColor.GREEN + "Archon plugin reloaded.");
             return true;
         }
 
@@ -35,8 +37,8 @@ public class AdminCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (!player.hasPermission("archon.admin")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
+        if (!player.hasPermission(plugin.getConfig().getString("permissions.admin-command"))) {
+            player.sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("messages.no-permission")));
             return true;
         }
 
@@ -44,3 +46,4 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 }
+

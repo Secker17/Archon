@@ -1,6 +1,6 @@
 name: Archon
 main: com.asfaltios.archon.Archon
-version: 1.0
+version: 1.1
 api-version: 1.21
 author: Asfaltios Advanced
 description: A comprehensive admin plugin with advanced GUI.
@@ -37,6 +37,11 @@ permissions:
       archon.admin.playermanagement.teleportto: true
       archon.admin.playermanagement.bring: true
       archon.admin.playermanagement.inspect: true
+      archon.admin.playermanagement.permission: true
+      archon.admin.playermanagement.message: true
+      archon.admin.playermanagement.heal: true
+      archon.admin.playermanagement.feed: true
+      archon.admin.playermanagement.sethealth: true
 
   archon.admin.playermanagement.kick:
     description: Allows kicking players.
@@ -66,6 +71,26 @@ permissions:
     description: Allows inspecting players' inventories.
     default: op
 
+  archon.admin.playermanagement.permission:
+    description: Allows modifying player permissions.
+    default: op
+
+  archon.admin.playermanagement.message:
+    description: Allows sending private messages to players.
+    default: op
+
+  archon.admin.playermanagement.heal:
+    description: Allows healing players.
+    default: op
+
+  archon.admin.playermanagement.feed:
+    description: Allows feeding players.
+    default: op
+
+  archon.admin.playermanagement.sethealth:
+    description: Allows setting players' health.
+    default: op
+
   archon.admin.servermanagement:
     description: Allows access to server management features.
     default: op
@@ -76,6 +101,8 @@ permissions:
       archon.admin.servermanagement.serverstats: true
       archon.admin.servermanagement.executecommand: true
       archon.admin.servermanagement.manageplugins: true
+      archon.admin.servermanagement.whitelist: true
+      archon.admin.servermanagement.viewlogs: true
 
   archon.admin.servermanagement.changetime:
     description: Allows changing the time.
@@ -101,6 +128,14 @@ permissions:
     description: Allows managing plugins.
     default: op
 
+  archon.admin.servermanagement.whitelist:
+    description: Allows managing the server whitelist.
+    default: op
+
+  archon.admin.servermanagement.viewlogs:
+    description: Allows viewing server logs.
+    default: op
+
   archon.admin.personaltools:
     description: Allows access to personal admin tools.
     default: op
@@ -111,6 +146,8 @@ permissions:
       archon.admin.personaltools.giveitem: true
       archon.admin.personaltools.enderchest: true
       archon.admin.personaltools.togglegamemode: true
+      archon.admin.personaltools.vanish: true
+      archon.admin.personaltools.speed: true
 
   archon.admin.personaltools.togglefly:
     description: Allows toggling fly mode.
@@ -134,4 +171,12 @@ permissions:
 
   archon.admin.personaltools.togglegamemode:
     description: Allows toggling your game mode.
+    default: op
+
+  archon.admin.personaltools.vanish:
+    description: Allows toggling vanish mode.
+    default: op
+
+  archon.admin.personaltools.speed:
+    description: Allows setting your movement speed.
     default: op

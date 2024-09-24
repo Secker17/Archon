@@ -11,6 +11,12 @@ public class Archon extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        // Save default config if it doesn't exist
+        saveDefaultConfig();
+
+        // Load the config
+        reloadConfig();
+
         // Display a fancy startup message in the console
         displayStartupMessage();
 
@@ -21,6 +27,8 @@ public class Archon extends JavaPlugin {
 
         getLogger().info("Archon plugin enabled.");
     }
+
+
 
     @Override
     public void onDisable() {
