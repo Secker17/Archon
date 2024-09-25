@@ -332,8 +332,8 @@ public class AdminGUI implements Listener {
         }
 
         // Back and Close buttons
-        gui.setItem(36, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
-        gui.setItem(40, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
+        gui.setItem(39, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
+        gui.setItem(41, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
 
         player.openInventory(gui);
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
@@ -458,7 +458,7 @@ public class AdminGUI implements Listener {
         }
 
         // Back and Close Buttons
-        gui.setItem(40, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
+        gui.setItem(39, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
         gui.setItem(41, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
 
         player.openInventory(gui);
@@ -847,7 +847,7 @@ public class AdminGUI implements Listener {
 
         // Back and Close Buttons
         gui.setItem(48, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
-        gui.setItem(49, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
+        gui.setItem(50, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
 
         player.openInventory(gui);
     }
@@ -865,7 +865,7 @@ public class AdminGUI implements Listener {
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("gui.titles.server-management-gui", "&bServer Management"));
-        Inventory gui = Bukkit.createInventory(null, 45, title);
+        Inventory gui = Bukkit.createInventory(null, 54, title); // Increased to 6 rows (54 slots)
 
         // Get player's preferred glass color or default from config
         String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
@@ -877,8 +877,8 @@ public class AdminGUI implements Listener {
 
         // Decorative Border
         ItemStack borderItem = createGuiItem(glassMaterial, " ");
-        for (int i = 0; i < 45; i++) {
-            if (i < 9 || i >= 36 || i % 9 == 0 || i % 9 == 8) {
+        for (int i = 0; i < 54; i++) {
+            if (i < 9 || i >= 45 || i % 9 == 0 || i % 9 == 8) {
                 gui.setItem(i, borderItem);
             }
         }
@@ -886,14 +886,14 @@ public class AdminGUI implements Listener {
         // Decorative Corners
         gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
         gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(36, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(44, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
 
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "" + ChatColor.BOLD + "Server Management"));
 
-        // Center area (slots 20-24,29-33)
-        int[] itemSlots = {20, 21, 22, 23, 24, 29, 30, 31, 32, 33};
+        // Symmetrical layout: four items on top row, two items below
+        int[] itemSlots = {20, 21, 22, 23, 24, 31}; // Four items on the top, two below
 
         int index = 0;
 
@@ -927,7 +927,7 @@ public class AdminGUI implements Listener {
             items.add(createGuiItem(Material.REPEATER, "&dManage Plugins", "&7Enable or disable plugins"));
         }
 
-        // Place items in GUI
+        // Place items in GUI with the new symmetrical layout
         for (ItemStack item : items) {
             if (index < itemSlots.length) {
                 int slot = itemSlots[index];
@@ -938,9 +938,9 @@ public class AdminGUI implements Listener {
             }
         }
 
-        // Back and Close Buttons
-        gui.setItem(40, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
-        gui.setItem(41, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
+        // Back and Close Buttons in the bottom center
+        gui.setItem(48, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
+        gui.setItem(50, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
 
         player.openInventory(gui);
     }
@@ -959,7 +959,7 @@ public class AdminGUI implements Listener {
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("gui.titles.personal-tools-gui", "&bPersonal Tools"));
-        Inventory gui = Bukkit.createInventory(null, 45, title);
+        Inventory gui = Bukkit.createInventory(null, 54, title); // Increased to 6 rows
 
         // Get player's preferred glass color or default from config
         String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
@@ -971,8 +971,8 @@ public class AdminGUI implements Listener {
 
         // Decorative Border
         ItemStack borderItem = createGuiItem(glassMaterial, " ");
-        for (int i = 0; i < 45; i++) {
-            if (i < 9 || i >= 36 || i % 9 == 0 || i % 9 == 8) {
+        for (int i = 0; i < 54; i++) {
+            if (i < 9 || i >= 45 || i % 9 == 0 || i % 9 == 8) {
                 gui.setItem(i, borderItem);
             }
         }
@@ -980,16 +980,14 @@ public class AdminGUI implements Listener {
         // Decorative Corners
         gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
         gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(36, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(44, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
 
         // Title in the center top
-        gui.setItem(4, createGuiItem(Material.NETHER_STAR, ChatColor.AQUA + "" + ChatColor.BOLD + "Personal Tools"));
+        gui.setItem(4, createGuiItem(Material.NETHERITE_AXE, ChatColor.AQUA + "" + ChatColor.BOLD + "Personal Tools"));
 
-        // Center area (slots 20-24,29-33)
-        int[] itemSlots = {20, 21, 22, 23, 24, 29, 30, 31, 32, 33};
-
-        int index = 0;
+        // Symmetrical arrangement in the center
+        int[] itemSlots = {20, 21, 22, 23, 24, 29, 30, 31, 32, 33, 38, 39, 42, 43, 44}; // Center rows for tools
 
         // Feature toggles
         boolean toggleFlyEnabled = plugin.getConfig().getBoolean("features.personal-tools.toggle-fly", true);
@@ -1029,23 +1027,33 @@ public class AdminGUI implements Listener {
             items.add(createGuiItem(Material.SUGAR, "&bSet Speed", "&7Set your movement speed"));
         }
 
-        // Place items in GUI
-        for (ItemStack item : items) {
-            if (index < itemSlots.length) {
-                int slot = itemSlots[index];
-                gui.setItem(slot, item);
-                index++;
-            } else {
-                break; // No more slots available
-            }
+        // Place items in GUI in a clean and centered way
+        for (int i = 0; i < items.size() && i < itemSlots.length; i++) {
+            gui.setItem(itemSlots[i], items.get(i));
         }
 
-        // Back and Close Buttons
-        gui.setItem(40, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
-        gui.setItem(41, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
+        // Back and Close Buttons in the bottom center
+        gui.setItem(48, createGuiItem(Material.ARROW, ChatColor.GREEN + "Back"));
+        gui.setItem(50, createGuiItem(Material.BARRIER, ChatColor.RED + "Close"));
 
         player.openInventory(gui);
     }
+
+    /**
+     * Utility method to create a fancy item for the GUI
+     */
+    private static ItemStack createGuiItem(Material material, String name, String lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        meta.setLore(Collections.singletonList(ChatColor.translateAlternateColorCodes('&', lore)));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+
+
+
 
 
 
