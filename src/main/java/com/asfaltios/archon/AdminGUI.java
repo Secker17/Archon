@@ -32,12 +32,13 @@ import java.util.*;
 
 public class AdminGUI implements Listener {
 
-    private static Archon plugin = Archon.getInstance();
+    private static final Archon plugin = Archon.getInstance();
 
     // Permissions
     private static final String PERM_PLAYERMANAGEMENT = "archon.admin.playermanagement";
     private static final String PERM_SERVERMANAGEMENT = "archon.admin.servermanagement";
     private static final String PERM_PERSONALTOOLS = "archon.admin.personaltools";
+    private static final String PERM_ADMINSETTINGS = "archon.admin.adminsettings";
 
     // Sub-permissions
     private static final String PERM_PLAYERMANAGEMENT_KICK = "archon.admin.playermanagement.kick";
@@ -52,9 +53,9 @@ public class AdminGUI implements Listener {
     private static final String PERM_PLAYERMANAGEMENT_HEAL = "archon.admin.playermanagement.heal";
     private static final String PERM_PLAYERMANAGEMENT_FEED = "archon.admin.playermanagement.feed";
     private static final String PERM_PLAYERMANAGEMENT_SETHEALTH = "archon.admin.playermanagement.sethealth";
+
     private static final String PERM_SERVERMANAGEMENT_MAINTENANCE = "archon.admin.servermanagement.maintenance";
     private static final String PERM_SERVERMANAGEMENT_STOPSERVER = "archon.admin.servermanagement.stopserver";
-
     private static final String PERM_SERVERMANAGEMENT_CHANGETIME = "archon.admin.servermanagement.changetime";
     private static final String PERM_SERVERMANAGEMENT_CHANGEWEATHER = "archon.admin.servermanagement.changeweather";
     private static final String PERM_SERVERMANAGEMENT_MANAGEWORLDS = "archon.admin.servermanagement.manageworlds";
@@ -62,7 +63,7 @@ public class AdminGUI implements Listener {
     private static final String PERM_SERVERMANAGEMENT_EXECUTECOMMAND = "archon.admin.servermanagement.executecommand";
     private static final String PERM_SERVERMANAGEMENT_MANAGEPLUGINS = "archon.admin.servermanagement.manageplugins";
     private static final String PERM_SERVERMANAGEMENT_WHITELIST = "archon.admin.servermanagement.whitelist";
-    private static final String PERM_SERVERMANAGEMENT_VIEWLOGS = "archon.admin.servermanagement.viewlogs"; // Added this line
+    private static final String PERM_SERVERMANAGEMENT_VIEWLOGS = "archon.admin.servermanagement.viewlogs";
 
     private static final String PERM_PERSONALTOOLS_TOGGLEFLY = "archon.admin.personaltools.togglefly";
     private static final String PERM_PERSONALTOOLS_GODMODE = "archon.admin.personaltools.godmode";
@@ -72,6 +73,14 @@ public class AdminGUI implements Listener {
     private static final String PERM_PERSONALTOOLS_TOGGLEGAMEMODE = "archon.admin.personaltools.togglegamemode";
     private static final String PERM_PERSONALTOOLS_VANISH = "archon.admin.personaltools.vanish";
     private static final String PERM_PERSONALTOOLS_SPEED = "archon.admin.personaltools.speed";
+
+    // Nye tillatelser
+    private static final String PERM_PLAYERMANAGEMENT_SETRANK = "archon.admin.playermanagement.setrank";
+    private static final String PERM_PLAYERMANAGEMENT_VIEWSTATS = "archon.admin.playermanagement.viewstats";
+    private static final String PERM_SERVERMANAGEMENT_BROADCAST = "archon.admin.servermanagement.broadcast";
+    private static final String PERM_PERSONALTOOLS_NICKNAME = "archon.admin.personaltools.nickname";
+    private static final String PERM_PERSONALTOOLS_CLEARINVENTORY = "archon.admin.personaltools.clearinventory";
+
 
     private static boolean maintenanceMode = false;
 
@@ -88,8 +97,9 @@ public class AdminGUI implements Listener {
     private static final Map<UUID, Material> playerGlassColor = new HashMap<>();
     private static final Material DEFAULT_GLASS_MATERIAL = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
 
-    private static final String PERMISSION_GUI_TITLE = ChatColor.DARK_PURPLE + "Permission Management"; // Added this line
+    private static final String PERMISSION_GUI_TITLE = ChatColor.DARK_PURPLE + "Permission Management";
     private static final String SET_HEALTH_GUI_TITLE = ChatColor.RED + "Set Player Health";
+
 
     /**
      * Opens the main admin GUI for the player.
@@ -97,9 +107,6 @@ public class AdminGUI implements Listener {
      * @param player The player to open the GUI for.
      */
     public static void openMainGUI(Player player) {
-        Archon plugin = Archon.getInstance();
-
-        // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("gui.titles.main-gui", "&bArchon Admin Panel"));
         Inventory gui = Bukkit.createInventory(null, 45, title);
@@ -171,10 +178,6 @@ public class AdminGUI implements Listener {
         }
     }
 
-
-
-
-
     /**
      * Creates an ItemStack with the given material, name, and lore.
      *
@@ -203,8 +206,6 @@ public class AdminGUI implements Listener {
         return item;
     }
 
-
-
     /**
      * Handles clicks in the main admin GUI.
      *
@@ -213,7 +214,6 @@ public class AdminGUI implements Listener {
     @EventHandler
     public void onMainGUIClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Archon plugin = Archon.getInstance();
 
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
@@ -271,6 +271,10 @@ public class AdminGUI implements Listener {
                 openPersonalToolsGUI(player);
                 break;
             case "Admin Settings":
+                if (!player.hasPermission(PERM_ADMINSETTINGS)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to access Admin Settings.");
+                    return;
+                }
                 player.closeInventory();
                 openAdminSettingsGUI(player);
                 break;
@@ -286,10 +290,12 @@ public class AdminGUI implements Listener {
         }
     }
 
-
-
+    /**
+     * Opens the Customize GUI.
+     *
+     * @param player The player.
+     */
     private void openCustomizeGUI(Player player) {
-        Archon plugin = Archon.getInstance();
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("gui.titles.customize-gui", "&bCustomize GUI"));
@@ -339,10 +345,14 @@ public class AdminGUI implements Listener {
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
     }
 
+    /**
+     * Handles clicks in the Customize GUI.
+     *
+     * @param event The InventoryClickEvent.
+     */
     @EventHandler
     public void onCustomizeGUIClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        Archon plugin = Archon.getInstance();
 
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
@@ -387,6 +397,11 @@ public class AdminGUI implements Listener {
 
 
 
+    /**
+     * Opens the Admin Settings GUI.
+     *
+     * @param player The admin player.
+     */
     /**
      * Opens the Admin Settings GUI.
      *
@@ -532,6 +547,7 @@ public class AdminGUI implements Listener {
 
         Material clickedType = clickedItem.getType();
         if (clickedType == glassMaterial || clickedType == Material.SEA_LANTERN) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0.5f);
             return;
         }
 
@@ -588,6 +604,7 @@ public class AdminGUI implements Listener {
                 break;
         }
     }
+
 
 
 
@@ -833,6 +850,12 @@ public class AdminGUI implements Listener {
         if (permissionsEnabled && player.hasPermission(PERM_PLAYERMANAGEMENT_PERMISSION)) {
             items.add(createGuiItem(Material.WRITABLE_BOOK, "&dManage Permissions", "&7Modify a player's permissions"));
         }
+        if (player.hasPermission(PERM_PLAYERMANAGEMENT_SETRANK)) {
+            items.add(createGuiItem(Material.NAME_TAG, "&6Set Rank", "&7Change a player's rank"));
+        }
+        if (player.hasPermission(PERM_PLAYERMANAGEMENT_VIEWSTATS)) {
+            items.add(createGuiItem(Material.BOOK, "&eView Player Stats", "&7View statistics of a player"));
+        }
 
         // Place items in GUI
         for (ItemStack item : items) {
@@ -865,7 +888,7 @@ public class AdminGUI implements Listener {
         // Get GUI title from config
         String title = ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfig().getString("gui.titles.server-management-gui", "&bServer Management"));
-        Inventory gui = Bukkit.createInventory(null, 54, title); // Increased to 6 rows (54 slots)
+        Inventory gui = Bukkit.createInventory(null, 54, title);
 
         // Get player's preferred glass color or default from config
         String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
@@ -892,11 +915,6 @@ public class AdminGUI implements Listener {
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "" + ChatColor.BOLD + "Server Management"));
 
-        // Symmetrical layout: four items on top row, two items below
-        int[] itemSlots = {20, 21, 22, 23, 24, 31}; // Four items on the top, two below
-
-        int index = 0;
-
         // Feature toggles
         boolean changeTimeEnabled = plugin.getConfig().getBoolean("features.server-management.change-time", true);
         boolean changeWeatherEnabled = plugin.getConfig().getBoolean("features.server-management.change-weather", true);
@@ -904,6 +922,7 @@ public class AdminGUI implements Listener {
         boolean serverStatsEnabled = plugin.getConfig().getBoolean("features.server-management.server-stats", true);
         boolean executeCommandEnabled = plugin.getConfig().getBoolean("features.server-management.execute-command", true);
         boolean managePluginsEnabled = plugin.getConfig().getBoolean("features.server-management.manage-plugins", true);
+        boolean broadcastEnabled = plugin.getConfig().getBoolean("features.server-management.broadcast", true);
 
         // Server Management Items
         List<ItemStack> items = new ArrayList<>();
@@ -926,16 +945,23 @@ public class AdminGUI implements Listener {
         if (managePluginsEnabled && player.hasPermission(PERM_SERVERMANAGEMENT_MANAGEPLUGINS)) {
             items.add(createGuiItem(Material.REPEATER, "&dManage Plugins", "&7Enable or disable plugins"));
         }
+        if (broadcastEnabled && player.hasPermission(PERM_SERVERMANAGEMENT_BROADCAST)) {
+            items.add(createGuiItem(Material.OAK_SIGN, "&6Broadcast Message", "&7Send a message to all players"));
+        }
 
-        // Place items in GUI with the new symmetrical layout
+        // Place items in GUI starting from slot 10
+        int slot = 19;
         for (ItemStack item : items) {
-            if (index < itemSlots.length) {
-                int slot = itemSlots[index];
-                gui.setItem(slot, item);
-                index++;
-            } else {
+            // Skip border slots (leftmost and rightmost columns)
+            while (slot % 9 == 0 || (slot + 1) % 9 == 0) {
+                slot++;
+            }
+            // Ensure we don't exceed the GUI size
+            if (slot >= 44) {
                 break; // No more slots available
             }
+            gui.setItem(slot, item);
+            slot++;
         }
 
         // Back and Close Buttons in the bottom center
@@ -944,6 +970,7 @@ public class AdminGUI implements Listener {
 
         player.openInventory(gui);
     }
+
 
 
 
@@ -1026,6 +1053,13 @@ public class AdminGUI implements Listener {
         if (setSpeedEnabled && player.hasPermission(PERM_PERSONALTOOLS_SPEED)) {
             items.add(createGuiItem(Material.SUGAR, "&bSet Speed", "&7Set your movement speed"));
         }
+        if (player.hasPermission(PERM_PERSONALTOOLS_NICKNAME)) {
+            items.add(createGuiItem(Material.NAME_TAG, "&dSet Nickname", "&7Change your display name"));
+        }
+        if (player.hasPermission(PERM_PERSONALTOOLS_CLEARINVENTORY)) {
+            items.add(createGuiItem(Material.TNT, "&cClear Inventory", "&7Clear your inventory"));
+        }
+
 
         // Place items in GUI in a clean and centered way
         for (int i = 0; i < items.size() && i < itemSlots.length; i++) {
@@ -1246,6 +1280,23 @@ public class AdminGUI implements Listener {
                 player.closeInventory();
                 openPlayerSelector(player, itemName);
                 break;
+            case "Set Rank":
+                if (!player.hasPermission(PERM_PLAYERMANAGEMENT_SETRANK)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to set player ranks.");
+                    return;
+                }
+                player.closeInventory();
+                openPlayerSelector(player, itemName);
+                break;
+            case "View Player Stats":
+                if (!player.hasPermission(PERM_PLAYERMANAGEMENT_VIEWSTATS)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to view player stats.");
+                    return;
+                }
+                player.closeInventory();
+                openPlayerSelector(player, itemName);
+                break;
+
             case "Back":
                 player.closeInventory();
                 openMainGUI(player);
@@ -1258,6 +1309,32 @@ public class AdminGUI implements Listener {
         }
     }
 
+    /**
+     * Displays player statistics to the admin.
+     *
+     * @param admin  The admin player.
+     * @param target The target player.
+     */
+    private void viewPlayerStats(Player admin, Player target) {
+        admin.sendMessage(ChatColor.GREEN + "Statistics for " + target.getName() + ":");
+        admin.sendMessage(ChatColor.YELLOW + "Health: " + ChatColor.WHITE + target.getHealth() + "/" + target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        admin.sendMessage(ChatColor.YELLOW + "Food Level: " + ChatColor.WHITE + target.getFoodLevel());
+        admin.sendMessage(ChatColor.YELLOW + "Experience Level: " + ChatColor.WHITE + target.getLevel());
+        admin.sendMessage(ChatColor.YELLOW + "Location: " + ChatColor.WHITE + formatLocation(target.getLocation()));
+    }
+
+    /**
+     * Formats a location into a readable string.
+     *
+     * @param location The location to format.
+     * @return A string representing the location.
+     */
+    private String formatLocation(Location location) {
+        return "World: " + location.getWorld().getName() +
+                ", X: " + location.getBlockX() +
+                ", Y: " + location.getBlockY() +
+                ", Z: " + location.getBlockZ();
+    }
 
     /**
      * Handles clicks in the Server Management GUI.
@@ -1346,6 +1423,16 @@ public class AdminGUI implements Listener {
                 player.closeInventory();
                 openPluginManagementGUI(player);
                 break;
+            case "Broadcast Message":
+                if (!player.hasPermission(PERM_SERVERMANAGEMENT_BROADCAST)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to broadcast messages.");
+                    return;
+                }
+                player.closeInventory();
+                player.sendMessage(ChatColor.YELLOW + "Type the message to broadcast in chat.");
+                ChatInputHandler.expectingBroadcastMessage.put(player.getUniqueId(), true);
+                break;
+
             case "Back":
                 player.closeInventory();
                 openMainGUI(player);
@@ -1454,6 +1541,23 @@ public class AdminGUI implements Listener {
                     return;
                 }
                 setSpeed(player);
+                break;
+            case "Set Nickname":
+                if (!player.hasPermission(PERM_PERSONALTOOLS_NICKNAME)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to set a nickname.");
+                    return;
+                }
+                player.closeInventory();
+                player.sendMessage(ChatColor.YELLOW + "Type your new nickname in chat.");
+                ChatInputHandler.expectingNickname.put(player.getUniqueId(), true);
+                break;
+            case "Clear Inventory":
+                if (!player.hasPermission(PERM_PERSONALTOOLS_CLEARINVENTORY)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to clear your inventory.");
+                    return;
+                }
+                player.getInventory().clear();
+                player.sendMessage(ChatColor.GREEN + "Your inventory has been cleared.");
                 break;
             case "Back":
                 player.closeInventory();
@@ -1712,27 +1816,13 @@ public class AdminGUI implements Listener {
     private void displayServerStats(Player player) {
         int onlinePlayers = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
-        double tps = getServerTPS();
+        double tps = ServerUtils.getTPS(); // Updated to use ServerUtils
         long availableMemory = getAvailableMemory();
 
         player.sendMessage(ChatColor.GREEN + "Server Statistics:");
         player.sendMessage(ChatColor.YELLOW + "Online Players: " + ChatColor.WHITE + onlinePlayers + "/" + maxPlayers);
         player.sendMessage(ChatColor.YELLOW + "TPS: " + ChatColor.WHITE + String.format("%.2f", tps));
         player.sendMessage(ChatColor.YELLOW + "Available Memory: " + ChatColor.WHITE + availableMemory + " MB");
-    }
-
-    /**
-     * Gets the current server TPS (Ticks Per Second).
-     *
-     * @return The server TPS.
-     */
-    private double getServerTPS() {
-        try {
-            double[] tps = Bukkit.getServer().getTPS();
-            return tps[0];
-        } catch (NoSuchMethodError e) {
-            return 20.0;
-        }
     }
 
     /**
@@ -2000,10 +2090,17 @@ public class AdminGUI implements Listener {
                 admin.sendMessage(ChatColor.YELLOW + "Type the message to send to " + target.getName() + " in chat.");
                 ChatInputHandler.expectingPrivateMessage.put(admin.getUniqueId(), target.getUniqueId());
                 break;
+            case "Set Rank":
+                admin.closeInventory();
+                admin.sendMessage(ChatColor.YELLOW + "Type the rank to assign to " + target.getName() + " in chat.");
+                ChatInputHandler.expectingRankChange.put(admin.getUniqueId(), target.getUniqueId());
+                break;
+
             case "Manage Permissions":
                 admin.closeInventory();
                 openPermissionManagementGUI(admin, target);
                 break;
+
             default:
                 admin.sendMessage(ChatColor.RED + "Invalid action.");
                 break;

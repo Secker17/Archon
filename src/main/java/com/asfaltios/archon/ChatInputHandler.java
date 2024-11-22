@@ -31,16 +31,39 @@ public class ChatInputHandler implements Listener {
     public static HashMap<UUID, SimpleEntry<UUID, Boolean>> expectingPermissionNode = new HashMap<>();
     public static HashMap<UUID, UUID> permissionTargets = new HashMap<>();
     public static HashMap<UUID, Boolean> expectingShutdownTime = new HashMap<>();
+    public static HashMap<UUID, Boolean> expectingNickname = new HashMap<>();
+    public static HashMap<UUID, UUID> expectingRankChange = new HashMap<>();
+    public static HashMap<UUID, Boolean> expectingBroadcastMessage = new HashMap<>();
+
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        String message = event.getMessage();
+
+        // Handle nickname setting
+        if (expectingNickname.getOrDefault(playerUUID, false)) {
+            event.setCancelled(true);
+            expectingNickname.remove(playerUUID);
+            String nickname = ChatColor.translateAlternateColorCodes('&', message);
+            if (nickname.length() > 16) {
+                player.sendMessage(ChatColor.RED + "Nickname is too long. Maximum 16 characters.");
+                return;
+            }
+            Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
+                player.setDisplayName(nickname + ChatColor.RESET);
+                player.setPlayerListName(nickname);
+                player.sendMessage(ChatColor.GREEN + "Your nickname has been set to " + nickname + ".");
+            });
+            return;
+        }
 
         // Handle world-related inputs
-        if (expectingWorldName.containsKey(player.getUniqueId())) {
+        if (expectingWorldName.containsKey(playerUUID)) {
             event.setCancelled(true);
-            String action = expectingWorldName.get(player.getUniqueId());
-            String worldName = event.getMessage();
+            String action = expectingWorldName.get(playerUUID);
+            String worldName = message;
 
             switch (action) {
                 case "create":
@@ -56,20 +79,20 @@ public class ChatInputHandler implements Listener {
                     break;
             }
 
-            expectingWorldName.remove(player.getUniqueId());
+            expectingWorldName.remove(playerUUID);
         }
         // Handle command execution input
-        else if (expectingCommand.getOrDefault(player.getUniqueId(), false)) {
+        else if (expectingCommand.getOrDefault(playerUUID, false)) {
             event.setCancelled(true);
-            String command = event.getMessage();
+            String command = message;
             executeServerCommand(player, command);
-            expectingCommand.remove(player.getUniqueId());
+            expectingCommand.remove(playerUUID);
         }
         // Handle whitelist management input
-        else if (expectingWhitelistPlayer.containsKey(player.getUniqueId())) {
+        else if (expectingWhitelistPlayer.containsKey(playerUUID)) {
             event.setCancelled(true);
-            String action = expectingWhitelistPlayer.get(player.getUniqueId());
-            String playerName = event.getMessage();
+            String action = expectingWhitelistPlayer.get(playerUUID);
+            String playerName = message;
 
             switch (action) {
                 case "add":
@@ -79,23 +102,23 @@ public class ChatInputHandler implements Listener {
                     break;
             }
 
-            expectingWhitelistPlayer.remove(player.getUniqueId());
+            expectingWhitelistPlayer.remove(playerUUID);
         }
         // Handle speed setting input
-        else if (expectingSpeedValue.getOrDefault(player.getUniqueId(), false)) {
+        else if (expectingSpeedValue.getOrDefault(playerUUID, false)) {
             event.setCancelled(true);
-            String speedInput = event.getMessage();
+            String speedInput = message;
             setPlayerSpeed(player, speedInput);
-            expectingSpeedValue.remove(player.getUniqueId());
+            expectingSpeedValue.remove(playerUUID);
         }
         // Handle log viewing input
-        else if (expectingLogPage.getOrDefault(player.getUniqueId(), false)) {
+        else if (expectingLogPage.getOrDefault(playerUUID, false)) {
             event.setCancelled(true);
-            String pageInput = event.getMessage();
+            String pageInput = message;
 
             if (pageInput.equalsIgnoreCase("exit")) {
                 player.sendMessage(ChatColor.GREEN + "Exited log viewing.");
-                expectingLogPage.remove(player.getUniqueId());
+                expectingLogPage.remove(playerUUID);
                 return;
             }
 
@@ -103,13 +126,13 @@ public class ChatInputHandler implements Listener {
             // Do not remove expectingLogPage here to allow continuous viewing
         }
         // Handle setting health value
-        else if (expectingHealthValue.containsKey(player.getUniqueId())) {
+        else if (expectingHealthValue.containsKey(playerUUID)) {
             event.setCancelled(true);
-            UUID targetUUID = expectingHealthValue.get(player.getUniqueId());
+            UUID targetUUID = expectingHealthValue.get(playerUUID);
             Player target = Bukkit.getPlayer(targetUUID);
             if (target != null) {
                 try {
-                    double health = Double.parseDouble(event.getMessage());
+                    double health = Double.parseDouble(message);
                     double maxHealth = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
                     if (health < 1 || health > maxHealth) {
                         player.sendMessage(ChatColor.RED + "Health must be between 1 and " + maxHealth + ".");
@@ -126,33 +149,33 @@ public class ChatInputHandler implements Listener {
             } else {
                 player.sendMessage(ChatColor.RED + "Player not found.");
             }
-            expectingHealthValue.remove(player.getUniqueId());
+            expectingHealthValue.remove(playerUUID);
         }
         // Handle private messaging
-        else if (expectingPrivateMessage.containsKey(player.getUniqueId())) {
+        else if (expectingPrivateMessage.containsKey(playerUUID)) {
             event.setCancelled(true);
-            UUID targetUUID = expectingPrivateMessage.get(player.getUniqueId());
+            UUID targetUUID = expectingPrivateMessage.get(playerUUID);
             Player target = Bukkit.getPlayer(targetUUID);
             if (target != null) {
-                String message = event.getMessage();
+                String msg = message;
                 Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
-                    target.sendMessage(ChatColor.LIGHT_PURPLE + "[Private] " + player.getName() + ": " + ChatColor.WHITE + message);
-                    player.sendMessage(ChatColor.LIGHT_PURPLE + "[Private] To " + target.getName() + ": " + ChatColor.WHITE + message);
+                    target.sendMessage(ChatColor.LIGHT_PURPLE + "[Private] " + player.getName() + ": " + ChatColor.WHITE + msg);
+                    player.sendMessage(ChatColor.LIGHT_PURPLE + "[Private] To " + target.getName() + ": " + ChatColor.WHITE + msg);
                 });
             } else {
                 player.sendMessage(ChatColor.RED + "Player not found.");
             }
-            expectingPrivateMessage.remove(player.getUniqueId());
+            expectingPrivateMessage.remove(playerUUID);
         }
         // Handle permission management
-        else if (expectingPermissionNode.containsKey(player.getUniqueId())) {
+        else if (expectingPermissionNode.containsKey(playerUUID)) {
             event.setCancelled(true);
-            SimpleEntry<UUID, Boolean> entry = expectingPermissionNode.get(player.getUniqueId());
+            SimpleEntry<UUID, Boolean> entry = expectingPermissionNode.get(playerUUID);
             UUID targetUUID = entry.getKey();
             boolean isAdding = entry.getValue();
             Player target = Bukkit.getPlayer(targetUUID);
             if (target != null) {
-                String permissionNode = event.getMessage();
+                String permissionNode = message;
                 Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
                     PermissionAttachment attachment = target.addAttachment(Archon.getInstance());
                     if (isAdding) {
@@ -170,12 +193,12 @@ public class ChatInputHandler implements Listener {
             } else {
                 player.sendMessage(ChatColor.RED + "Player not found.");
             }
-            expectingPermissionNode.remove(player.getUniqueId());
+            expectingPermissionNode.remove(playerUUID);
         }
         // Handle shutdown time input
-        else if (expectingShutdownTime.getOrDefault(player.getUniqueId(), false)) {
+        else if (expectingShutdownTime.getOrDefault(playerUUID, false)) {
             event.setCancelled(true);
-            String timeInput = event.getMessage();
+            String timeInput = message;
             try {
                 int time = Integer.parseInt(timeInput);
                 if (time <= 0) {
@@ -186,8 +209,32 @@ public class ChatInputHandler implements Listener {
             } catch (NumberFormatException e) {
                 player.sendMessage(ChatColor.RED + "Invalid number format.");
             }
-            expectingShutdownTime.remove(player.getUniqueId());
+            expectingShutdownTime.remove(playerUUID);
         }
+        // Handle rank change (if applicable)
+        else if (expectingRankChange.containsKey(playerUUID)) {
+            event.setCancelled(true);
+            UUID targetUUID = expectingRankChange.get(playerUUID);
+            Player target = Bukkit.getPlayer(targetUUID);
+            if (target != null) {
+                String rank = message;
+                setPlayerRank(player, target, rank);
+            } else {
+                player.sendMessage(ChatColor.RED + "Player not found.");
+            }
+            expectingRankChange.remove(playerUUID);
+        }
+        // Handle broadcast message
+        else if (expectingBroadcastMessage.getOrDefault(playerUUID, false)) {
+            event.setCancelled(true);
+            String messageToBroadcast = message;
+            Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
+                String broadcastMessage = ChatColor.translateAlternateColorCodes('&', messageToBroadcast);
+                Bukkit.broadcastMessage(ChatColor.GOLD + "[Broadcast] " + broadcastMessage);
+            });
+            expectingBroadcastMessage.remove(playerUUID);
+        }
+
     }
 
     private void initiateServerShutdown(Player player, int timeInSeconds) {
@@ -196,7 +243,6 @@ public class ChatInputHandler implements Listener {
             Bukkit.shutdown();
         }, timeInSeconds * 20L); // Convert seconds to ticks
     }
-
 
     /**
      * Creates a new world with the given name.
@@ -397,6 +443,26 @@ public class ChatInputHandler implements Listener {
                 player.sendMessage(ChatColor.RED + "An error occurred while reading the log file.");
                 e.printStackTrace();
             }
+        });
+    }
+
+    /**
+     * Sets a player's rank by adding them to a permissions group.
+     * (Note: Since we're not using LuckPerms, this is a simplified example.)
+     *
+     * @param admin  The admin player.
+     * @param target The target player.
+     * @param rank   The rank to assign.
+     */
+    private void setPlayerRank(Player admin, Player target, String rank) {
+        Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
+            // This is a placeholder implementation.
+            // You would need to integrate with your permissions plugin here.
+            PermissionAttachment attachment = target.addAttachment(Archon.getInstance());
+            attachment.setPermission("group." + rank.toLowerCase(), true);
+            target.recalculatePermissions();
+            admin.sendMessage(ChatColor.GREEN + "Set " + target.getName() + "'s rank to " + rank + ".");
+            target.sendMessage(ChatColor.GREEN + "Your rank has been set to " + rank + " by an administrator.");
         });
     }
 }

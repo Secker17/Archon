@@ -93,6 +93,8 @@ features:
     view-logs: true
     maintenance-mode: true
     stop-server: true
+    broadcast: true
+
 
   personal-tools:
     enabled: true # Under Development

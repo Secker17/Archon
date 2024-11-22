@@ -1,7 +1,7 @@
 name: Archon
 main: com.asfaltios.archon.Archon
 version: 1.1
-api-version: 1.21
+api-version: 1.13
 author: Asfaltios Advanced
 description: A comprehensive admin plugin with advanced GUI.
 
@@ -21,6 +21,9 @@ permissions:
       archon.admin.servermanagement: true
       archon.admin.personaltools: true
       archon.admin.reload: true
+      archon.admin.servermanagement.broadcast:
+        description: Allows the player to broadcast messages to all players
+        default: op
 
   archon.admin.reload:
     description: Allows reloading the plugin.
@@ -42,6 +45,8 @@ permissions:
       archon.admin.playermanagement.heal: true
       archon.admin.playermanagement.feed: true
       archon.admin.playermanagement.sethealth: true
+      archon.admin.adminsettings: true
+
 
   archon.admin.playermanagement.kick:
     description: Allows kicking players.
