@@ -27,7 +27,7 @@ language: 'en_US'
 
 gui:
   # Default glass color for GUIs if player hasn't customized it
-  default-glass-color: 'LIGHT_BLUE_STAINED_GLASS_PANE'
+  default-glass-color: 'RED_STAINED_GLASS_PANE'
 
   # Titles for various GUIs
   titles:

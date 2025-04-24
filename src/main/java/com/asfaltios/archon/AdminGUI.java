@@ -80,6 +80,9 @@ public class AdminGUI implements Listener {
     private static final String PERM_SERVERMANAGEMENT_BROADCAST = "archon.admin.servermanagement.broadcast";
     private static final String PERM_PERSONALTOOLS_NICKNAME = "archon.admin.personaltools.nickname";
     private static final String PERM_PERSONALTOOLS_CLEARINVENTORY = "archon.admin.personaltools.clearinventory";
+    // Decorative Items Constants
+    private static final ItemStack BORDER_ITEM = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
+    private static final ItemStack CORNER_ITEM = createGuiItem(Material.GILDED_BLACKSTONE, " ");
 
 
     private static boolean maintenanceMode = false;
@@ -95,10 +98,20 @@ public class AdminGUI implements Listener {
 
     // GUI Customization Settings
     private static final Map<UUID, Material> playerGlassColor = new HashMap<>();
-    private static final Material DEFAULT_GLASS_MATERIAL = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+    private static final Material DEFAULT_GLASS_MATERIAL = Material.RED_STAINED_GLASS_PANE;
 
     private static final String PERMISSION_GUI_TITLE = ChatColor.DARK_PURPLE + "Permission Management";
     private static final String SET_HEALTH_GUI_TITLE = ChatColor.RED + "Set Player Health";
+
+
+    private static Material getPlayerGlassMaterial(Player player) {
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
+        Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
+        if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
+            defaultGlassMaterial = DEFAULT_GLASS_MATERIAL;
+        }
+        return playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
+    }
 
 
     /**
@@ -111,13 +124,8 @@ public class AdminGUI implements Listener {
                 plugin.getConfig().getString("gui.titles.main-gui", "&bArchon Admin Panel"));
         Inventory gui = Bukkit.createInventory(null, 45, title);
 
-        // Get player's preferred glass color or use default from config
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
-        Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
-        if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
-        }
-        Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
+        Material glassMaterial = getPlayerGlassMaterial(player);
+
 
         // Decorative borders with symmetrical pattern
         ItemStack borderItem = createGuiItem(glassMaterial, " ");
@@ -127,11 +135,13 @@ public class AdminGUI implements Listener {
             }
         }
 
+
+
         // Decorative Corners
-        gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(36, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(44, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(36, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(44, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Centered title with beacon icon
         gui.setItem(4, createGuiItem(Material.BEACON, ChatColor.AQUA + "" + ChatColor.BOLD + "Archon Admin Panel"));
@@ -231,10 +241,10 @@ public class AdminGUI implements Listener {
         Material clickedType = clickedItem.getType();
 
         // Get player's preferred glass color or use default from config
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -314,7 +324,7 @@ public class AdminGUI implements Listener {
                 Material.WHITE_STAINED_GLASS_PANE,
                 Material.ORANGE_STAINED_GLASS_PANE,
                 Material.MAGENTA_STAINED_GLASS_PANE,
-                Material.LIGHT_BLUE_STAINED_GLASS_PANE,
+                Material.RED_STAINED_GLASS_PANE,
                 Material.YELLOW_STAINED_GLASS_PANE,
                 Material.LIME_STAINED_GLASS_PANE,
                 Material.PINK_STAINED_GLASS_PANE,
@@ -325,11 +335,11 @@ public class AdminGUI implements Listener {
                 Material.BLUE_STAINED_GLASS_PANE,
                 Material.BROWN_STAINED_GLASS_PANE,
                 Material.GREEN_STAINED_GLASS_PANE,
-                Material.RED_STAINED_GLASS_PANE,
+                Material.LIGHT_BLUE_STAINED_GLASS_PANE,
                 Material.BLACK_STAINED_GLASS_PANE
         };
 
-        int[] colorSlots = {20, 21, 22, 23, 24, 29, 30, 31, 32, 33};
+        int[] colorSlots = {12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 29, 30, 31, 32, 33};
         for (int i = 0; i < glassColors.length && i < colorSlots.length; i++) {
             Material glass = glassColors[i];
             String colorName = glass.name().replace("_STAINED_GLASS_PANE", "").replace("_", " ");
@@ -415,10 +425,10 @@ public class AdminGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 45, title);
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -431,10 +441,10 @@ public class AdminGUI implements Listener {
         }
 
         // Decorative Corners
-        gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(36, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(44, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(36, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(44, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.NETHER_STAR, ChatColor.AQUA + "" + ChatColor.BOLD + "Admin Settings"));
@@ -513,6 +523,40 @@ public class AdminGUI implements Listener {
         ChatInputHandler.expectingShutdownTime.put(player.getUniqueId(), true);
     }
 
+    private void broadcastTitle(String title, String subtitle) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.sendTitle(
+                    ChatColor.translateAlternateColorCodes('&', title),
+                    ChatColor.translateAlternateColorCodes('&', subtitle),
+                    10, 70, 20
+            );
+        }
+    }
+
+    private void clearChat(Player admin) {
+        for (int i = 0; i < 100; i++) {
+            Bukkit.broadcastMessage(" ");
+        }
+        Bukkit.broadcastMessage(ChatColor.GRAY + "Chat was cleared by " + ChatColor.YELLOW + admin.getName());
+    }
+
+    private void teleportAll(Player admin) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.teleport(admin.getLocation());
+        }
+        admin.sendMessage(ChatColor.GREEN + "All players have been teleported to your location.");
+    }
+
+    private void killAllMobs(World world, Player admin) {
+        int count = 0;
+        for (Entity entity : world.getEntities()) {
+            if (!(entity instanceof Player)) {
+                entity.remove();
+                count++;
+            }
+        }
+        admin.sendMessage(ChatColor.GREEN + "Removed " + count + " entities from the world.");
+    }
 
 
     /**
@@ -534,10 +578,10 @@ public class AdminGUI implements Listener {
         event.setCancelled(true);
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -768,10 +812,10 @@ public class AdminGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, title);
 
         // Get player's preferred glass color or default from config
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -784,10 +828,10 @@ public class AdminGUI implements Listener {
         }
 
         // Decorative Corners
-        gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(45, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(53, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.PLAYER_HEAD, ChatColor.AQUA + "" + ChatColor.BOLD + "Player Management"));
@@ -891,10 +935,10 @@ public class AdminGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, title);
 
         // Get player's preferred glass color or default from config
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -907,10 +951,10 @@ public class AdminGUI implements Listener {
         }
 
         // Decorative Corners
-        gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(45, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(53, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "" + ChatColor.BOLD + "Server Management"));
@@ -948,8 +992,22 @@ public class AdminGUI implements Listener {
         if (broadcastEnabled && player.hasPermission(PERM_SERVERMANAGEMENT_BROADCAST)) {
             items.add(createGuiItem(Material.OAK_SIGN, "&6Broadcast Message", "&7Send a message to all players"));
         }
+        // NYE SERVER-MANAGEMENT ITEMS
+        if (player.hasPermission("archon.admin.broadcasttitle")) {
+            items.add(createGuiItem(Material.GOLD_BLOCK, "&6Broadcast Title", "&7Send a title message to all players"));
+        }
+        if (player.hasPermission("archon.admin.clearchat")) {
+            items.add(createGuiItem(Material.PAPER, "&bClear Chat", "&7Clear chat for all players"));
+        }
+        if (player.hasPermission("archon.admin.teleportall")) {
+            items.add(createGuiItem(Material.ENDER_EYE, "&aTeleport All", "&7Teleport all players to you"));
+        }
+        if (player.hasPermission("archon.admin.killmobs")) {
+            items.add(createGuiItem(Material.DIAMOND_SWORD, "&cKill All Mobs", "&7Remove all mobs in current world"));
+        }
 
-        // Place items in GUI starting from slot 10
+
+        // Place items in GUI starting from slot 19
         int slot = 19;
         for (ItemStack item : items) {
             // Skip border slots (leftmost and rightmost columns)
@@ -989,10 +1047,10 @@ public class AdminGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 54, title); // Increased to 6 rows
 
         // Get player's preferred glass color or default from config
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -1005,10 +1063,10 @@ public class AdminGUI implements Listener {
         }
 
         // Decorative Corners
-        gui.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
-        gui.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
+        gui.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(45, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        gui.setItem(53, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Title in the center top
         gui.setItem(4, createGuiItem(Material.NETHERITE_AXE, ChatColor.AQUA + "" + ChatColor.BOLD + "Personal Tools"));
@@ -1167,10 +1225,10 @@ public class AdminGUI implements Listener {
         if (clickedItem == null || !clickedItem.hasItemMeta()) return;
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -1359,10 +1417,10 @@ public class AdminGUI implements Listener {
         if (clickedItem == null || !clickedItem.hasItemMeta()) return;
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -1432,6 +1490,43 @@ public class AdminGUI implements Listener {
                 player.sendMessage(ChatColor.YELLOW + "Type the message to broadcast in chat.");
                 ChatInputHandler.expectingBroadcastMessage.put(player.getUniqueId(), true);
                 break;
+            case "Broadcast Title":
+                if (!player.hasPermission("archon.admin.broadcasttitle")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to broadcast titles.");
+                    return;
+                }
+                player.closeInventory();
+                player.sendMessage(ChatColor.YELLOW + "Type the title and subtitle separated by a semicolon ';'. For example: &aTitle;&bSubtitle");
+                ChatInputHandler.expectingBroadcastTitle.put(player.getUniqueId(), true);
+                break;
+
+            case "Clear Chat":
+                if (!player.hasPermission("archon.admin.clearchat")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to clear the chat.");
+                    return;
+                }
+                clearChat(player);
+                player.closeInventory();
+                break;
+
+            case "Teleport All":
+                if (!player.hasPermission("archon.admin.teleportall")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to teleport all players.");
+                    return;
+                }
+                teleportAll(player);
+                player.closeInventory();
+                break;
+
+            case "Kill All Mobs":
+                if (!player.hasPermission("archon.admin.killmobs")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to kill mobs.");
+                    return;
+                }
+                killAllMobs(player.getWorld(), player);
+                player.closeInventory();
+                break;
+
 
             case "Back":
                 player.closeInventory();
@@ -1465,10 +1560,10 @@ public class AdminGUI implements Listener {
         event.setCancelled(true);
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -1688,10 +1783,10 @@ public class AdminGUI implements Listener {
         Inventory pluginGUI = Bukkit.createInventory(null, 54, title);
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -1704,10 +1799,10 @@ public class AdminGUI implements Listener {
         }
 
         // Decorative Corners
-        pluginGUI.setItem(0, createGuiItem(Material.SEA_LANTERN, " "));
-        pluginGUI.setItem(8, createGuiItem(Material.SEA_LANTERN, " "));
-        pluginGUI.setItem(45, createGuiItem(Material.SEA_LANTERN, " "));
-        pluginGUI.setItem(53, createGuiItem(Material.SEA_LANTERN, " "));
+        pluginGUI.setItem(0, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        pluginGUI.setItem(8, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        pluginGUI.setItem(45, createGuiItem(Material.GILDED_BLACKSTONE, " "));
+        pluginGUI.setItem(53, createGuiItem(Material.GILDED_BLACKSTONE, " "));
 
         // Title in the center top
         pluginGUI.setItem(4, createGuiItem(Material.REPEATER, ChatColor.AQUA + "" + ChatColor.BOLD + "Manage Plugins"));
@@ -1919,10 +2014,10 @@ public class AdminGUI implements Listener {
         event.setCancelled(true);
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = pluginInstance.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = pluginInstance.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(player.getUniqueId(), defaultGlassMaterial);
 
@@ -2015,10 +2110,10 @@ public class AdminGUI implements Listener {
         Material clickedType = clickedItem.getType();
 
         // Get player's preferred glass color or default
-        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "LIGHT_BLUE_STAINED_GLASS_PANE");
+        String defaultGlassColorName = plugin.getConfig().getString("gui.default-glass-color", "RED_STAINED_GLASS_PANE");
         Material defaultGlassMaterial = Material.matchMaterial(defaultGlassColorName);
         if (defaultGlassMaterial == null || !defaultGlassMaterial.isItem()) {
-            defaultGlassMaterial = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            defaultGlassMaterial = Material.RED_STAINED_GLASS_PANE;
         }
         Material glassMaterial = playerGlassColor.getOrDefault(admin.getUniqueId(), defaultGlassMaterial);
 

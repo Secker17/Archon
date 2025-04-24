@@ -20,7 +20,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 public class ChatInputHandler implements Listener {
 
-    // HashMaps to track players expecting input for various actions
     public static HashMap<UUID, String> expectingWorldName = new HashMap<>();
     public static HashMap<UUID, Boolean> expectingCommand = new HashMap<>();
     public static HashMap<UUID, String> expectingWhitelistPlayer = new HashMap<>();
@@ -34,13 +33,35 @@ public class ChatInputHandler implements Listener {
     public static HashMap<UUID, Boolean> expectingNickname = new HashMap<>();
     public static HashMap<UUID, UUID> expectingRankChange = new HashMap<>();
     public static HashMap<UUID, Boolean> expectingBroadcastMessage = new HashMap<>();
-
+    public static HashMap<UUID, Boolean> expectingBroadcastTitle = new HashMap<>(); // NY VARIABEL
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
         String message = event.getMessage();
+
+        // Broadcast Title Handler
+        if (expectingBroadcastTitle.getOrDefault(playerUUID, false)) {
+            event.setCancelled(true);
+            expectingBroadcastTitle.remove(playerUUID);
+
+            String[] parts = message.split(";", 2);
+            if (parts.length == 2) {
+                Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendTitle(ChatColor.translateAlternateColorCodes('&', parts[0]),
+                                ChatColor.translateAlternateColorCodes('&', parts[1]), 10, 70, 20);
+                    }
+                });
+                player.sendMessage(ChatColor.GREEN + "Broadcasted title successfully!");
+            } else {
+                player.sendMessage(ChatColor.RED + "Invalid format! Use: title;subtitle");
+            }
+            return;
+        }
+
+        // Resten av eksisterende input-håndtering
 
         // Handle nickname setting
         if (expectingNickname.getOrDefault(playerUUID, false)) {
