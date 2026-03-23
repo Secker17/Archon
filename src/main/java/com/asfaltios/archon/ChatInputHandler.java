@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.attribute.Attribute;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -50,8 +49,14 @@ public class ChatInputHandler implements Listener {
             if (parts.length == 2) {
                 Bukkit.getScheduler().runTask(Archon.getInstance(), () -> {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendTitle(ChatColor.translateAlternateColorCodes('&', parts[0]),
-                                ChatColor.translateAlternateColorCodes('&', parts[1]), 10, 70, 20);
+                        Compat.sendTitle(
+                                p,
+                                ChatColor.translateAlternateColorCodes('&', parts[0]),
+                                ChatColor.translateAlternateColorCodes('&', parts[1]),
+                                10,
+                                70,
+                                20
+                        );
                     }
                 });
                 player.sendMessage(ChatColor.GREEN + "Broadcasted title successfully!");
@@ -154,7 +159,7 @@ public class ChatInputHandler implements Listener {
             if (target != null) {
                 try {
                     double health = Double.parseDouble(message);
-                    double maxHealth = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+                    double maxHealth = Compat.getMaxHealth(target);
                     if (health < 1 || health > maxHealth) {
                         player.sendMessage(ChatColor.RED + "Health must be between 1 and " + maxHealth + ".");
                     } else {

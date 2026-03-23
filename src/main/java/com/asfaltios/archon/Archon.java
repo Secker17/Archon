@@ -11,54 +11,41 @@ public class Archon extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        // Save default config if it doesn't exist
         saveDefaultConfig();
-
-        // Load the config
         reloadConfig();
-
-        // Display a fancy startup message in the console
         displayStartupMessage();
 
-        // Register commands and event listeners
-        getCommand("admin").setExecutor(new AdminCommand(this));
+        if (getCommand("admin") != null) {
+            getCommand("admin").setExecutor(new AdminCommand(this));
+        } else {
+            getLogger().warning("Command 'admin' is missing from plugin.yml.");
+        }
+
         getServer().getPluginManager().registerEvents(new AdminGUI(), this);
         getServer().getPluginManager().registerEvents(new ChatInputHandler(), this);
 
-        getLogger().info("Archon plugin enabled.");
+        getLogger().info("Archon enabled for " + Bukkit.getVersion() + ".");
     }
-
-
 
     @Override
     public void onDisable() {
-        getLogger().info("Archon plugin disabled.");
+        getLogger().info("Archon disabled.");
     }
 
-    /**
-     * Get instance of the plugin.
-     *
-     * @return The instance of Archon plugin.
-     */
     public static Archon getInstance() {
         return instance;
     }
 
-    /**
-     * Displays a fancy and modern startup message in the console.
-     */
     private void displayStartupMessage() {
         String[] message = {
                 "",
-                "§a███████  ███████╗   ",
-                "§a██╔══██  ██╔════╝   ",
-                "§a███████  █████╗ ",
-                "§a██╔══██  ██╔══╝  ",
-                "§a██╔═ ██  ██║     ",
-                "§a╚═╝  ╚╝  ╚═╝     ",
-                "",
-                "§eMade by Asfaltios Advanced",
-                "§eJoin our Discord: §9https://discord.gg/ESZtT2aDS3",
+                "§b==============================",
+                "§b Archon Admin Suite",
+                "§7 Cross-version admin controls",
+                "§7 Author: §fAsfaltios Advanced",
+                "§7 Server: §f" + Bukkit.getVersion(),
+                "§7 Discord: §9https://discord.gg/ESZtT2aDS3",
+                "§b==============================",
                 ""
         };
 

@@ -1,13 +1,12 @@
 name: Archon
 main: com.asfaltios.archon.Archon
-version: 1.1
-api-version: 1.13
+version: 2.0.0
 author: Asfaltios Advanced
-description: A comprehensive admin plugin with advanced GUI.
+description: Cross-version admin GUI with player, server, and utility controls.
 
 commands:
   admin:
-    description: Opens the Archon Admin GUI.
+    description: Opens the Archon admin GUI.
     usage: /admin [reload]
     permission: archon.admin
     aliases: [archon]
@@ -17,16 +16,22 @@ permissions:
     description: Allows access to the main admin command.
     default: op
     children:
+      archon.admin.reload: true
+      archon.admin.adminsettings: true
       archon.admin.playermanagement: true
       archon.admin.servermanagement: true
       archon.admin.personaltools: true
-      archon.admin.reload: true
-      archon.admin.servermanagement.broadcast:
-        description: Allows the player to broadcast messages to all players
-        default: op
+      archon.admin.broadcasttitle: true
+      archon.admin.clearchat: true
+      archon.admin.teleportall: true
+      archon.admin.killmobs: true
 
   archon.admin.reload:
-    description: Allows reloading the plugin.
+    description: Allows reloading the plugin configuration.
+    default: op
+
+  archon.admin.adminsettings:
+    description: Allows access to admin settings.
     default: op
 
   archon.admin.playermanagement:
@@ -45,8 +50,8 @@ permissions:
       archon.admin.playermanagement.heal: true
       archon.admin.playermanagement.feed: true
       archon.admin.playermanagement.sethealth: true
-      archon.admin.adminsettings: true
-
+      archon.admin.playermanagement.setrank: true
+      archon.admin.playermanagement.viewstats: true
 
   archon.admin.playermanagement.kick:
     description: Allows kicking players.
@@ -69,11 +74,11 @@ permissions:
     default: op
 
   archon.admin.playermanagement.bring:
-    description: Allows bringing players to you.
+    description: Allows bringing players.
     default: op
 
   archon.admin.playermanagement.inspect:
-    description: Allows inspecting players' inventories.
+    description: Allows inspecting player inventories.
     default: op
 
   archon.admin.playermanagement.permission:
@@ -81,7 +86,7 @@ permissions:
     default: op
 
   archon.admin.playermanagement.message:
-    description: Allows sending private messages to players.
+    description: Allows sending private messages.
     default: op
 
   archon.admin.playermanagement.heal:
@@ -93,7 +98,15 @@ permissions:
     default: op
 
   archon.admin.playermanagement.sethealth:
-    description: Allows setting players' health.
+    description: Allows setting player health.
+    default: op
+
+  archon.admin.playermanagement.setrank:
+    description: Allows setting player rank placeholders.
+    default: op
+
+  archon.admin.playermanagement.viewstats:
+    description: Allows viewing player stats.
     default: op
 
   archon.admin.servermanagement:
@@ -108,6 +121,9 @@ permissions:
       archon.admin.servermanagement.manageplugins: true
       archon.admin.servermanagement.whitelist: true
       archon.admin.servermanagement.viewlogs: true
+      archon.admin.servermanagement.maintenance: true
+      archon.admin.servermanagement.stopserver: true
+      archon.admin.servermanagement.broadcast: true
 
   archon.admin.servermanagement.changetime:
     description: Allows changing the time.
@@ -134,11 +150,23 @@ permissions:
     default: op
 
   archon.admin.servermanagement.whitelist:
-    description: Allows managing the server whitelist.
+    description: Allows managing the whitelist.
     default: op
 
   archon.admin.servermanagement.viewlogs:
     description: Allows viewing server logs.
+    default: op
+
+  archon.admin.servermanagement.maintenance:
+    description: Allows toggling maintenance mode.
+    default: op
+
+  archon.admin.servermanagement.stopserver:
+    description: Allows stopping the server.
+    default: op
+
+  archon.admin.servermanagement.broadcast:
+    description: Allows broadcasting chat messages.
     default: op
 
   archon.admin.personaltools:
@@ -153,6 +181,8 @@ permissions:
       archon.admin.personaltools.togglegamemode: true
       archon.admin.personaltools.vanish: true
       archon.admin.personaltools.speed: true
+      archon.admin.personaltools.nickname: true
+      archon.admin.personaltools.clearinventory: true
 
   archon.admin.personaltools.togglefly:
     description: Allows toggling fly mode.
@@ -183,5 +213,29 @@ permissions:
     default: op
 
   archon.admin.personaltools.speed:
-    description: Allows setting your movement speed.
+    description: Allows setting your speed.
+    default: op
+
+  archon.admin.personaltools.nickname:
+    description: Allows changing your nickname.
+    default: op
+
+  archon.admin.personaltools.clearinventory:
+    description: Allows clearing your inventory.
+    default: op
+
+  archon.admin.broadcasttitle:
+    description: Allows broadcasting titles.
+    default: op
+
+  archon.admin.clearchat:
+    description: Allows clearing chat.
+    default: op
+
+  archon.admin.teleportall:
+    description: Allows teleporting all players.
+    default: op
+
+  archon.admin.killmobs:
+    description: Allows removing mobs in the current world.
     default: op

@@ -31,7 +31,7 @@ gui:
 
   # Titles for various GUIs
   titles:
-    main-gui: '&k|&4&lArchon &r&4Admin Panel&k|'
+    main-gui: '&b&lArchon Control Center'
     player-management-gui: '&bPlayer Management'
     server-management-gui: '&bServer Management'
     personal-tools-gui: '&bPersonal Tools'
@@ -113,6 +113,7 @@ features:
 
 messages:
   no-permission: '&cYou do not have permission to perform this action.'
+  online-players: '&eOnline Players: &a%online%'
   player-not-found: '&cPlayer not found.'
   invalid-number: '&cInvalid number format.'
   action-successful: '&aAction performed successfully.'
